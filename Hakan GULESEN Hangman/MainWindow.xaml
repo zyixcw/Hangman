@@ -1,0 +1,163 @@
+﻿<Window x:Class="Hakan_GULESEN_Hangman.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Hakan_GULESEN_Hangman"
+        mc:Ignorable="d"
+        Title="Hangman Game" Height="900" Width="1200">
+
+    <Grid Background="#333333">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.Resources>
+            <!-- Style des boutons -->
+            <Style TargetType="Button">
+                <Setter Property="Background" Value="LightBlue"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Width" Value="50"/>
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="BorderBrush" Value="Black"/>
+                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                    BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                    CornerRadius="8">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Black"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="Black"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Style du Label -->
+            <Style TargetType="Label">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="36"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+
+            <!-- Style du TextBlock -->
+            <Style TargetType="TextBlock">
+                <Setter Property="FontSize" Value="36"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="LightGray"/>
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter Property="Padding" Value="10"/>
+            </Style>
+        </Grid.Resources>
+
+        <!-- Grid Titre -->
+        <Grid Grid.Row="0">
+            <Label Content="Jeu du Hangman" FontSize="48" FontWeight="Bold" Foreground="LightBlue" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
+
+        <!-- Grid Jeu -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="7*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Grid Image -->
+            <Grid Name="grid_image" Grid.Column="0">
+                <Canvas x:Name="PenduCanvas" Width="224" Height="259" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Line x:Name="poteau" X1="100" Y1="0" X2="100" Y2="200" Stroke="Black" StrokeThickness="5"/>
+                    <Line x:Name="barrehoriz" X1="100" Y1="0" X2="50" Y2="0" Stroke="LightBlue" StrokeThickness="5"/>
+                    <Line x:Name="corde" X1="50" Y1="0" X2="50" Y2="40" Stroke="Black" StrokeThickness="5"/>
+                    <Ellipse x:Name="tete" Width="30" Height="30" Canvas.Left="35" Canvas.Top="40" Stroke="LightBlue" Visibility="Hidden"/>
+                    <Line x:Name="torse" X1="50" Y1="70" X2="50" Y2="120" Stroke="Black" StrokeThickness="3" Visibility="Hidden"/>
+                    <Line x:Name="brasgauche" X1="50" Y1="80" X2="20" Y2="100" Stroke="LightBlue" StrokeThickness="3" Visibility="Hidden"/>
+                    <Line x:Name="brasdroit" X1="50" Y1="80" X2="80" Y2="100" Stroke="Black" StrokeThickness="3" Visibility="Hidden"/>
+                    <Line x:Name="jambegauche" X1="50" Y1="120" X2="20" Y2="150" Stroke="LightBlue" StrokeThickness="3" Visibility="Hidden"/>
+                    <Line x:Name="jambedroite" X1="50" Y1="120" X2="80" Y2="150" Stroke="Black" StrokeThickness="3" Visibility="Hidden"/>
+                </Canvas>
+            </Grid>
+
+            <!-- Grid Layout -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" x:Name="motcache" Text="Mot caché" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                <!-- Clavier -->
+                <Grid Grid.Row="1" Name="Grid_Keypad">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button x:Name="BtnA" Content="A" Click="Lettre_Click" Tag="A"/>
+                        <Button x:Name="BtnB" Content="B" Click="Lettre_Click" Tag="B"/>
+                        <Button x:Name="BtnC" Content="C" Click="Lettre_Click" Tag="C"/>
+                        <Button x:Name="BtnD" Content="D" Click="Lettre_Click" Tag="D"/>
+                        <Button x:Name="BtnE" Content="E" Click="Lettre_Click" Tag="E"/>
+                        <Button x:Name="BtnF" Content="F" Click="Lettre_Click" Tag="F"/>
+                        <Button x:Name="BtnG" Content="G" Click="Lettre_Click" Tag="G"/>
+                        <Button x:Name="BtnH" Content="H" Click="Lettre_Click" Tag="H"/>
+                        <Button x:Name="BtnI" Content="I" Click="Lettre_Click" Tag="I"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button x:Name="BtnJ" Content="J" Click="Lettre_Click" Tag="J"/>
+                        <Button x:Name="BtnK" Content="K" Click="Lettre_Click" Tag="K"/>
+                        <Button x:Name="BtnL" Content="L" Click="Lettre_Click" Tag="L"/>
+                        <Button x:Name="BtnM" Content="M" Click="Lettre_Click" Tag="M"/>
+                        <Button x:Name="BtnN" Content="N" Click="Lettre_Click" Tag="N"/>
+                        <Button x:Name="BtnO" Content="O" Click="Lettre_Click" Tag="O"/>
+                        <Button x:Name="BtnP" Content="P" Click="Lettre_Click" Tag="P"/>
+                        <Button x:Name="BtnQ" Content="Q" Click="Lettre_Click" Tag="Q"/>
+                        <Button x:Name="BtnR" Content="R" Click="Lettre_Click" Tag="R"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button x:Name="BtnS" Content="S" Click="Lettre_Click" Tag="S"/>
+                        <Button x:Name="BtnT" Content="T" Click="Lettre_Click" Tag="T"/>
+                        <Button x:Name="BtnU" Content="U" Click="Lettre_Click" Tag="U"/>
+                        <Button x:Name="BtnV" Content="V" Click="Lettre_Click" Tag="V"/>
+                        <Button x:Name="BtnW" Content="W" Click="Lettre_Click" Tag="W"/>
+                        <Button x:Name="BtnX" Content="X" Click="Lettre_Click" Tag="X"/>
+                        <Button x:Name="BtnY" Content="Y" Click="Lettre_Click" Tag="Y"/>
+                        <Button x:Name="BtnZ" Content="Z" Click="Lettre_Click" Tag="Z"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="2" HorizontalAlignment="Center">
+                    <Button Grid.Column="0" Content="Tirez un mot au sort !" Click="TirerMot_Click" Width="200" Background="Black" Foreground="LightBlue" Margin="-100,46,100,45"/>
+                    <Button x:Name="BtnToggleMusique" Content="Musique" Click="BtnToggleMusique_Click" Width="150" Background="Black" Foreground="LightBlue" Margin="132,46,-82,45"/>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <!-- Footer -->
+        <Grid Grid.Row="2">
+            <Label Content="Hangman © 2024 I Par Hakan" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="LightBlue"/>
+        </Grid>
+    </Grid>
+</Window>
